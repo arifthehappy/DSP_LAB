@@ -1,212 +1,74 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-struct dllNode{
-    struct dllNode *left;
-    int data;
-    struct dllNode *right;
-}dllNode;
+void heapify(int arr[], int n, int i){
+    int left = 2*i+1;
+    int right = 2*i+2;
+    int max = i;
 
-struct dllNode *head = NULL;
-
-// display double linked list
-void display(){
-    struct dllNode *temp;
-    temp = head;
-    if(head == NULL){
-        printf("LIST is EMPTY\n\n");
-        return;
+    if(arr[max] < arr[left] && left < n){
+        max = left;
     }
-    printf("\nList is: ");
-    while(temp != NULL){
-        printf("%d ", temp->data);
-        temp = temp->right;
+    if(arr[max] < arr[right] && right < n){
+        max = right;
     }
-    printf("\n\n");
-}
-
-// create a node
-struct dllNode *create_node(int val){
-    struct dllNode *new_node;
-    new_node = (struct dllNode *) malloc(sizeof(struct dllNode));
-    new_node->data = val;
-    new_node->right = NULL;
-    new_node->left = NULL;
-    return new_node;
-}
-
-// count number of nodes
-int count_node(struct dllNode *head){
-    int count = 0;
-    struct dllNode *temp;
-    temp = head;
-    while(temp != NULL){
-        count++;
-        temp = temp->right;
-    }
-    return count;
-}
-
-// Insert a node at the begining of DLL
-void insert_beg(int val){
-    struct dllNode * new_node;
-    new_node = create_node(val);
-    if(head == NULL){
-        head = new_node;
-    }
-    else{
-        new_node -> right = head;
-        head->left =  new_node;
-        head = new_node;
+    //max pos is changed
+    if(max != i){
+        int temp;
+        temp = arr[i];
+        arr[i] = arr[max];
+        arr[max] = temp;
+        heapify(arr,n, max); 
     }
 }
 
-// Insert a node at end of DLL
-void insert_end(int val){
-    struct dllNode * new_node;
-    new_node = create_node(val);
-    if(head == NULL){
-        head = new_node;
-    }
-    else {
-        struct dllNode * temp;
-        temp = head;
-        while(temp->right != NULL){
-            temp = temp->right;
-        }
-        temp->right = new_node;
-        new_node->left = temp;
+void insertHeapElement(int arr[], int n){
+
+}
+
+void buildMaxHeap(int arr[], int n){
+    for(int i = (n/2)-1; i>=0; i --){
+        heapify(arr,n,i);
     }
 }
 
-// Insert a node at specified position of DLL
-void insert_pos(int pos, int val){
-    struct dllNode * new_node, *temp, *prev;
+void printHeap(int arr[], int n){
+    int i = 0;
+    int ch1 = i*2 + 1;
+    int ch2 = i*2 + 2;
+    int level = 1;
 
-    int node_count = count_node(head);
-    new_node = create_node(val);
 
-    if(head == NULL){
-        head = new_node;
-    }
-    if(pos < node_count && pos > 0){
-        temp = head;
-        prev = NULL;
-        int i = 0;
-        while(i < pos){
-            prev = temp;
-            temp = temp->right;
-            i++;
-        }
-        prev->right = new_node;
-        new_node->right = temp;
-        new_node->left = prev;
-        temp->left = new_node;
-    }
-    else{
-        printf("Invalid position");
+    for( i = 0; i < n; i++){
+        if(i == (pow(2,level)-2))
+        printf("\n");
+        printf("%d  ", arr[i]);
     }
 }
 
-// delete a node at begining of DLL
-void delete_beg(){
-    if(head == NULL){
-        printf("List is empty");
-    }
-    else{
-        struct dllNode * temp;
-        temp = head;
-        head = head->right;
-        free(temp);
+void heapSort(int arr[], int n){
+    buildMaxHeap(arr,n);
+    for(int i = n-1; i>=0;i--){
+        int temp = arr[0];
+        arr[0] = arr[i];
+        arr[i] = temp;
+        heapify(arr,i,0);
     }
 }
-
-// delete first occurence of node in DLL
-void delete_node(int val){
-    if(head == NULL){
-        printf("List is empty");
-    }
-    else{
-        struct dllNode* temp, *prev;
-        temp = head;
-        while((temp != NULL)){
-            if(temp->data == val){
-                // data is at begining
-                if(head == temp){
-                    head=head->right;
-                    head->left = NULL;
-                    free(temp);
-                    return;
-                }
-                //data is at end
-                else if(temp->right == NULL){
-                    (temp->left)->right = NULL;
-                    free(temp);
-                    return;
-                }
-                //data is in mid
-                else{
-                    (temp->left)->right = temp->right;
-                    (temp->right)->left = temp->left;
-                    free(temp);
-                    return;
-                }
-            }
-            temp = temp->right;
-        }
-    }
-}
-
 
 
 int main(){
-    int ch;
-    int pos, val;
-    printf("Enter choice\n0. Exit\n1. Insert at beginning\n2. Insert at end\n3. Insert at position\n4. Delete a node\n5. Delete a value first occurence\n");
-    scanf("%d", &ch);
-    
 
-    while(1){    
-        switch (ch)
-        {
-        case 0:
-            printf("Exiting...\n");
-            exit(0);
-            break;
-        case 1:   
-            printf("Enter value to insert\n");
-            scanf("%d", &val);
-            insert_beg(val);
-            display();
-            break;
-        case 2:
-            printf("Enter value to insert\n");
-            scanf("%d", &val);
-            insert_end(val);
-            display();
-            break;
-        case 3:
-            printf("Enter value to insert\n");
-            scanf("%d", &val);
-            printf("Enter position to insert at\n");
-            scanf("%d", &pos);
-            insert_pos(pos, val);
-            display();
-            break;
-        case 4:
-            delete_beg();
-            display();
-            break;
-        case 5:
-            printf("Enter value to delete\n");
-            scanf("%d", &val);
-            delete_node(val);
-            display();
-        default:
-            printf("invalid choice\n\n");
-            break;
-        }
-        printf("Enter choice\n0. Exit\n1. Insert at beginning\n2. Insert at end\n3. Insert at position\n4. Delete a node\n5. Delete a value first occurence\n");
-        scanf("%d", &ch);
-    }
+    int arr[10] = {100,123,122,141,143,244,234,54,23,423};
+    int n = sizeof(arr)/sizeof(int);
+
+    buildMaxHeap(arr, n);
+    printHeap(arr,n);
+    heapSort(arr,n);
+    printHeap(arr,n);
+
+
+
+    return 0;
 }

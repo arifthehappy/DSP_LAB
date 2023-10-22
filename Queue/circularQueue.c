@@ -28,12 +28,12 @@ int main()
             case 1: 
                 CQInsert();
                 printf("F = %d R = %d \n", F, R);
-                //Display();
+                Display();
                 break;
             case 2: 
                 CQDelete();    
                 printf("F = %d R = %d \n", F, R);
-              //  Display();
+               Display();
                 break;
             default:
                 printf("invalid choice \n");
@@ -70,19 +70,21 @@ void CQDelete(){
         R  = 0;
         return;
     }
+    Q[F] = 0;
     F = (F+1)%MAX;
     Count--;
 
 }
 
-// void Display(){
-//     printf("\n**Queue** \n");
-//     int i = F;
-//     for(i = F; i < Count || i != R; i= (i+1)%MAX){
-//         if()
-//         printf("%d ", Q[i]);
-//     }
-//         //printf("%d ", Q[i]);
+void Display(){
+    printf("count  = %d ", Count);
+    printf("\n**Queue** \n");
+    int i = F;
+    for(i = 0; i < MAX; i++){
+        
+        printf("%d ", Q[i]);
+    }
+        //printf("%d ", Q[i]);
 
-//     printf("\n");
-// }
+    printf("\n");
+}

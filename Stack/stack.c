@@ -20,7 +20,7 @@ int main()
     int task;
     printf("\n Enter Choice\n");
 
-        scanf("%d", &task);
+    scanf("%d", &task);
     while(1){
         switch (task) {
             case 0 :
